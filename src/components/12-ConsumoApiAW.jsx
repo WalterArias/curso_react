@@ -1,12 +1,14 @@
+import { useState } from "react";
 import axios from "axios";
-export const ConsumirApi = () => {
-  // consumir la api
-  const leerApi = () => {
-    axios
-      .get("https://reqres.in/api/users?page=2")
-      //.then((datos) => console.log(datos))   // llega el objeto promesa
-      .then((datos) => console.log(datos.data))
-      .catch((error) => console.log(error.message));
+
+export const ConsumirApiAW = () => {
+  const [respuesta, setRespuesta] = useState([]);
+  const [pagina, setPagina] = useState();
+
+  const leerApi = async () => {
+    let { data } = await axios.get("https://reqres.in/api/users?page=2");
+    setRespuesta(data.data);
+    setPagina(data.page);
   };
   //insertar un registro
   const hacerPost = () => {
@@ -50,16 +52,21 @@ export const ConsumirApi = () => {
       <button className="btn btn-danger" onClick={hacerBorrar}>
         Borrar
       </button>
+
+      <hr />
+      <span className="bg bg-dark text-white p-2">{pagina}</span>
+      <hr />
+      <ol>
+        {respuesta.map((usuario) => {
+          return (
+            <li key={usuario.id}>
+              {usuario.first_name}
+              <img src={usuario.avatar} alt="" />
+              <hr />
+            </li>
+          );
+        })}
+      </ol>
     </>
   );
 };
-
-/*
-Se pueden consumir con la API FETCH DE JS
-Ecosistema REACT recomienda usar la libreria AXIOS
-https://www.npmjs.com/package/axios
-
-INSTALACION: npm install axios
-
-
-*/
